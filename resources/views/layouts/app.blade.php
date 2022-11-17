@@ -17,10 +17,15 @@
 
         <section class="navigation">
             <div class="container mx-auto">
-                <ul>
+                <ul class="navbar">
                     <li><a href="/">Home</a></li>
+                    @if (Auth::guest())
+                    <li><a href="/login">Login</a></li>
+                    @else
                     <li><a href="/visitors">Visitors</a></li>
-                    <li><a href="/visitors/create">Add Visitor</a></li>
+                    <li><a href="/visitors/create">Sign the guestbook</a></li>
+                    <p1>(Already Logged in)</p1>
+                    @endif
                 </ul>
             </div>
         </section>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
 class VisitorController extends Controller
 {
     /**
@@ -40,13 +42,14 @@ class VisitorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
             'comments' => 'required'
-        ]);
-
-        Visitor::create($request->all());
-
-        return redirect()->route('visitors.index')->with('success', 'Signing created successfully!');
+            ]);
+        $visitor = new Visitor;
+        $visitor->user()->associate(Auth::user());
+        $visitor->comments = $request->comments;
+        $visitor->save();
+        return redirect()->route('visitors.index')
+            ->with('success','Signing created successfully.');
     }
 
     /**
@@ -85,13 +88,12 @@ class VisitorController extends Controller
     public function update(Request $request, Visitor $visitor)
     {
         $request->validate([
-            'name' => 'Required',
-            'comments' => 'Required'
-        ]);
-
-        $visitor->update($request->all());
-
-        return redirect()->route('visitors.index')->with('success', 'Signing updated successfully!');
+            'comments' => 'required'
+            ]);
+        $visitor->comments = $request->comments;
+        $visitor->save();
+        return redirect()->route('visitors.index')
+            ->with('success', 'Signing updated successfully');
     }
 
     /**
