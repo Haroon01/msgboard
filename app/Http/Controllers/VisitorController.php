@@ -87,13 +87,21 @@ class VisitorController extends Controller
      */
     public function update(Request $request, Visitor $visitor)
     {
-        $request->validate([
-            'comments' => 'required'
-            ]);
-        $visitor->comments = $request->comments;
-        $visitor->save();
-        return redirect()->route('visitors.index')
-            ->with('success', 'Signing updated successfully');
+        $user = auth()->user();
+
+        if ($user->id == $visitor->user_id){
+            $request->validate([
+                'comments' => 'required'
+                ]);
+            $visitor->comments = $request->comments;
+            $visitor->save();
+            return redirect()->route('visitors.index')
+                ->with('success', 'Signing updated successfully');
+        }
+        else{
+            abort(401);
+        }
+
     }
 
     /**

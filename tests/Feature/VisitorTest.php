@@ -17,8 +17,12 @@ class VisitorTest extends TestCase
      */
     public function test_get_visitors()
     {
-        $response = $this->get('/visitors');
-        $response->assertOk();
+        $actingUser = User::factory()->create();
+
+        $response = $this->actingAs($actingUser)->call("GET", "/visitors");
+
+        $response->assertStatus(200);
+
 
         $response->assertViewIs('visitors.index');
 
